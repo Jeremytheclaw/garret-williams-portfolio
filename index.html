@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>(Richard) Garret Williams — Photographer · Filmmaker · Musician</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0d0d0d;
+      --bg-2: #141414;
+      --bg-3: #1a1a1a;
+      --white: #f5f5f5;
+      --gray: #999;
+      --gray-dim: #555;
+      --accent: #f5f5f5;
+      --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --nav-h: 72px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--white);
+      font-family: var(--font);
+      font-weight: 300;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      height: var(--nav-h);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 48px;
+      transition: background 0.4s ease, backdrop-filter 0.4s ease, box-shadow 0.4s ease;
+    }
+    nav.scrolled {
+      background: rgba(13,13,13,0.95);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 1px 0 rgba(255,255,255,0.05);
+    }
+
+    .nav-logo {
+      font-size: 13px;
+      font-weight: 400;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--white);
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 36px;
+      list-style: none;
+    }
+    .nav-links a {
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gray);
+      text-decoration: none;
+      transition: color 0.25s;
+      position: relative;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px; left: 0; right: 0;
+      height: 1px;
+      background: var(--white);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.3s ease;
+    }
+    .nav-links a:hover,
+    .nav-links a.active { color: var(--white); }
+    .nav-links a:hover::after,
+    .nav-links a.active::after { transform: scaleX(1); }
+
+    /* Hamburger */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+    }
+    .hamburger span {
+      display: block;
+      width: 24px;
+      height: 1px;
+      background: var(--white);
+      transition: transform 0.3s, opacity 0.3s;
+    }
+    .hamburger.open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+    /* Mobile menu */
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 99;
+      background: rgba(13,13,13,0.98);
+      backdrop-filter: blur(16px);
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 40px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.35s ease;
+    }
+    .mobile-menu.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+    .mobile-menu a {
+      font-size: 28px;
+      font-weight: 300;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--white);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .mobile-menu a:hover { color: var(--gray); }
+
+    /* ── HERO ── */
+    #hero {
+      position: relative;
+      height: 100dvh;
+      min-height: 600px;
+      display: flex;
+      align-items: flex-end;
+      overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background-image: url('https://images.squarespace-cdn.com/content/v1/5e7bce7b32e8dd4d03827631/5ab755fb-841e-479c-9d2d-f5ac28314e37/EF525CEF-613C-43AA-A193-72B7FEC67BC0.JPEG');
+      background-size: cover;
+      background-position: center 20%;
+      transform: scale(1.04);
+      animation: heroZoom 8s ease forwards;
+    }
+    @keyframes heroZoom {
+      to { transform: scale(1); }
+    }
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to top,
+        rgba(13,13,13,0.9) 0%,
+        rgba(13,13,13,0.35) 45%,
+        rgba(13,13,13,0.1) 100%
+      );
+    }
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      padding: 0 64px 80px;
+      animation: heroFadeUp 1.2s 0.4s ease both;
+    }
+    @keyframes heroFadeUp {
+      from { opacity: 0; transform: translateY(28px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .hero-name {
+      font-size: clamp(40px, 6vw, 86px);
+      font-weight: 300;
+      letter-spacing: -0.01em;
+      line-height: 1.05;
+      color: var(--white);
+      margin-bottom: 16px;
+    }
+    .hero-sub {
+      font-size: clamp(11px, 1.3vw, 14px);
+      font-weight: 400;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: rgba(245,245,245,0.65);
+    }
+    .scroll-indicator {
+      position: absolute;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      animation: heroFadeUp 1.2s 1.2s ease both;
+    }
+    .scroll-indicator span {
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(245,245,245,0.35);
+    }
+    .scroll-arrow {
+      width: 1px;
+      height: 48px;
+      background: linear-gradient(to bottom, rgba(245,245,245,0.4), transparent);
+      animation: scrollPulse 2s ease-in-out infinite;
+    }
+    @keyframes scrollPulse {
+      0%, 100% { opacity: 0.4; transform: scaleY(1); }
+      50% { opacity: 1; transform: scaleY(1.15); }
+    }
+
+    /* ── SECTION BASE ── */
+    section {
+      padding: 120px 64px;
+    }
+    .section-header {
+      margin-bottom: 72px;
+    }
+    .section-label {
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--gray-dim);
+      margin-bottom: 16px;
+    }
+    .section-title {
+      font-size: clamp(32px, 4vw, 56px);
+      font-weight: 300;
+      letter-spacing: -0.02em;
+      color: var(--white);
+    }
+
+    /* Fade-in on scroll */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity 0.75s ease, transform 0.75s ease;
+    }
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .fade-in-delay-1 { transition-delay: 0.1s; }
+    .fade-in-delay-2 { transition-delay: 0.2s; }
+    .fade-in-delay-3 { transition-delay: 0.3s; }
+    .fade-in-delay-4 { transition-delay: 0.4s; }
+
+    /* ── PHOTOGRAPHY ── */
+    #photography {
+      background: var(--bg);
+    }
+    .masonry-grid {
+      columns: 3;
+      column-gap: 16px;
+    }
+    .masonry-item {
+      break-inside: avoid;
+      margin-bottom: 16px;
+      overflow: hidden;
+      cursor: pointer;
+      position: relative;
+    }
+    .masonry-item img {
+      width: 100%;
+      display: block;
+      transition: transform 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    .masonry-item::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(13,13,13,0);
+      transition: background 0.4s ease;
+    }
+    .masonry-item:hover::after {
+      background: rgba(13,13,13,0.2);
+    }
+    .masonry-item:hover img {
+      transform: scale(1.04);
+    }
+
+    /* ── FILM ── */
+    #film {
+      background: var(--bg-2);
+    }
+    .film-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+    }
+    .film-card {
+      position: relative;
+      cursor: pointer;
+      overflow: hidden;
+      background: var(--bg-3);
+      transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.4s ease;
+    }
+    .film-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 24px 48px rgba(0,0,0,0.5);
+    }
+    .film-thumb {
+      position: relative;
+      aspect-ratio: 16/9;
+      overflow: hidden;
+    }
+    .film-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.55s ease;
+      filter: brightness(0.6);
+    }
+    .film-card:hover .film-thumb img {
+      transform: scale(1.04);
+    }
+    .play-btn {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 64px; height: 64px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(245,245,245,0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: border-color 0.3s, background 0.3s, transform 0.3s;
+    }
+    .film-card:hover .play-btn {
+      background: rgba(245,245,245,0.12);
+      border-color: var(--white);
+      transform: translate(-50%, -50%) scale(1.08);
+    }
+    .play-btn svg { margin-left: 4px; }
+    .film-info {
+      padding: 20px 24px 24px;
+    }
+    .film-tag {
+      font-size: 10px;
+      font-weight: 400;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gray-dim);
+      margin-bottom: 8px;
+    }
+    .film-title {
+      font-size: 17px;
+      font-weight: 400;
+      color: var(--white);
+    }
+
+    /* ── MUSIC ── */
+    #music {
+      background: var(--bg);
+    }
+    .music-tracks {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      margin-bottom: 48px;
+    }
+    .track-item {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      padding: 28px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      cursor: default;
+      transition: background 0.25s;
+    }
+    .track-num {
+      font-size: 12px;
+      color: var(--gray-dim);
+      min-width: 28px;
+      font-weight: 400;
+      letter-spacing: 0.05em;
+    }
+    .track-title {
+      font-size: 16px;
+      font-weight: 300;
+      color: var(--white);
+      flex: 1;
+    }
+    .waveform {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      height: 24px;
+    }
+    .waveform-bar {
+      width: 2px;
+      background: rgba(245,245,245,0.15);
+      border-radius: 1px;
+      animation: wavePulse 1.8s ease-in-out infinite;
+    }
+    .waveform-bar:nth-child(1)  { height: 8px;  animation-delay: 0s; }
+    .waveform-bar:nth-child(2)  { height: 14px; animation-delay: 0.15s; }
+    .waveform-bar:nth-child(3)  { height: 20px; animation-delay: 0.3s; }
+    .waveform-bar:nth-child(4)  { height: 12px; animation-delay: 0.45s; }
+    .waveform-bar:nth-child(5)  { height: 18px; animation-delay: 0.6s; }
+    .waveform-bar:nth-child(6)  { height: 22px; animation-delay: 0.15s; }
+    .waveform-bar:nth-child(7)  { height: 10px; animation-delay: 0.5s; }
+    .waveform-bar:nth-child(8)  { height: 16px; animation-delay: 0.25s; }
+    .waveform-bar:nth-child(9)  { height: 6px;  animation-delay: 0.7s; }
+    .waveform-bar:nth-child(10) { height: 14px; animation-delay: 0.1s; }
+    .waveform-bar:nth-child(11) { height: 20px; animation-delay: 0.4s; }
+    .waveform-bar:nth-child(12) { height: 8px;  animation-delay: 0.55s; }
+    @keyframes wavePulse {
+      0%, 100% { opacity: 0.15; transform: scaleY(1); }
+      50% { opacity: 0.45; transform: scaleY(1.35); }
+    }
+    .track-duration {
+      font-size: 12px;
+      color: var(--gray-dim);
+      font-variant-numeric: tabular-nums;
+    }
+    .music-note {
+      font-size: 13px;
+      color: var(--gray-dim);
+      letter-spacing: 0.02em;
+    }
+    .music-note a {
+      color: var(--gray);
+      text-decoration: none;
+      border-bottom: 1px solid var(--gray-dim);
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .music-note a:hover { color: var(--white); border-color: var(--white); }
+
+    /* ── ABOUT ── */
+    #about {
+      background: var(--bg-2);
+    }
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+    .about-img-wrap {
+      position: relative;
+      overflow: hidden;
+    }
+    .about-img-wrap img {
+      width: 100%;
+      display: block;
+      aspect-ratio: 3/4;
+      object-fit: cover;
+      object-position: center top;
+    }
+    .about-name {
+      font-size: clamp(28px, 3vw, 44px);
+      font-weight: 300;
+      letter-spacing: -0.02em;
+      margin-bottom: 28px;
+      line-height: 1.1;
+    }
+    .about-bio {
+      font-size: 16px;
+      font-weight: 300;
+      line-height: 1.8;
+      color: rgba(245,245,245,0.7);
+      margin-bottom: 40px;
+    }
+    .btn-outline {
+      display: inline-block;
+      padding: 14px 32px;
+      border: 1px solid rgba(245,245,245,0.3);
+      color: var(--white);
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      transition: background 0.3s, border-color 0.3s;
+    }
+    .btn-outline:hover {
+      background: rgba(245,245,245,0.08);
+      border-color: rgba(245,245,245,0.6);
+    }
+
+    /* ── CONTACT ── */
+    #contact {
+      background: var(--bg);
+      text-align: center;
+    }
+    .contact-heading {
+      font-size: clamp(36px, 5vw, 72px);
+      font-weight: 300;
+      letter-spacing: -0.02em;
+      margin-bottom: 20px;
+    }
+    .contact-sub {
+      font-size: 15px;
+      color: var(--gray);
+      margin-bottom: 48px;
+      font-weight: 300;
+    }
+    .contact-email {
+      display: inline-block;
+      padding: 16px 40px;
+      border: 1px solid rgba(245,245,245,0.25);
+      color: var(--white);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 400;
+      letter-spacing: 0.1em;
+      margin-bottom: 64px;
+      transition: background 0.3s, border-color 0.3s, transform 0.3s;
+    }
+    .contact-email:hover {
+      background: rgba(245,245,245,0.07);
+      border-color: rgba(245,245,245,0.5);
+      transform: translateY(-2px);
+    }
+    .social-links {
+      display: flex;
+      justify-content: center;
+      gap: 32px;
+    }
+    .social-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--gray-dim);
+      text-decoration: none;
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      transition: color 0.25s;
+    }
+    .social-link:hover { color: var(--white); }
+    .social-link svg {
+      opacity: 0.5;
+      transition: opacity 0.25s;
+    }
+    .social-link:hover svg { opacity: 1; }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid rgba(255,255,255,0.05);
+      padding: 32px 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--bg);
+    }
+    footer p {
+      font-size: 12px;
+      color: var(--gray-dim);
+      letter-spacing: 0.05em;
+    }
+    footer a {
+      color: var(--gray-dim);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    footer a:hover { color: var(--white); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 1024px) {
+      section { padding: 100px 48px; }
+      .masonry-grid { columns: 2; }
+      .about-grid { gap: 48px; }
+      nav { padding: 0 32px; }
+      footer { padding: 28px 32px; }
+      .hero-content { padding: 0 48px 72px; }
+    }
+
+    @media (max-width: 768px) {
+      section { padding: 80px 24px; }
+      nav { padding: 0 24px; }
+
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+      .mobile-menu { display: flex; }
+
+      .hero-content { padding: 0 24px 64px; }
+
+      .masonry-grid { columns: 1; }
+
+      .film-grid { grid-template-columns: 1fr; }
+
+      .about-grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+      .about-img-wrap img { aspect-ratio: 4/3; }
+
+      footer {
+        flex-direction: column;
+        gap: 12px;
+        padding: 24px;
+        text-align: center;
+      }
+      .social-links { gap: 20px; flex-wrap: wrap; justify-content: center; }
+
+      .contact-heading { margin-bottom: 16px; }
+    }
+
+    @media (max-width: 480px) {
+      .hero-name { font-size: 36px; }
+      .section-title { font-size: 28px; }
+    }
+
+    /* ── DIVIDER ── */
+    .divider {
+      width: 40px;
+      height: 1px;
+      background: rgba(245,245,245,0.15);
+      margin-bottom: 24px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="main-nav">
+  <a href="#hero" class="nav-logo">(Richard) Garret Williams</a>
+  <ul class="nav-links">
+    <li><a href="#photography">Photography</a></li>
+    <li><a href="#film">Film</a></li>
+    <li><a href="#music">Music</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <button class="hamburger" id="hamburger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobile-menu">
+  <a href="#photography" class="mobile-link">Photography</a>
+  <a href="#film" class="mobile-link">Film</a>
+  <a href="#music" class="mobile-link">Music</a>
+  <a href="#about" class="mobile-link">About</a>
+  <a href="#contact" class="mobile-link">Contact</a>
+</div>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <h1 class="hero-name">(Richard) Garret<br>Williams</h1>
+    <p class="hero-sub">Photographer &nbsp;·&nbsp; Filmmaker &nbsp;·&nbsp; Musician</p>
+  </div>
+  <div class="scroll-indicator">
+    <span>Scroll</span>
+    <div class="scroll-arrow"></div>
+  </div>
+</section>
+
+<!-- PHOTOGRAPHY -->
+<section id="photography">
+  <div class="section-header fade-in">
+    <p class="section-label">Work</p>
+    <h2 class="section-title">Photography</h2>
+  </div>
+  <div class="masonry-grid">
+    <div class="masonry-item fade-in fade-in-delay-1">
+      <img src="https://images.squarespace-cdn.com/content/v1/5e7bce7b32e8dd4d03827631/5ab755fb-841e-479c-9d2d-f5ac28314e37/EF525CEF-613C-43AA-A193-72B7FEC67BC0.JPEG"
+           alt="Cinematic portrait, City Hall" loading="lazy" />
+    </div>
+    <div class="masonry-item fade-in fade-in-delay-2">
+      <img src="https://images.squarespace-cdn.com/content/v1/5e7bce7b32e8dd4d03827631/fa3f283d-85ca-45ce-946b-b18031b01b5d/B665E929-2D23-49D4-9197-4E9661F3C288.JPEG"
+           alt="Landscape, moody mountain wetland" loading="lazy" />
+    </div>
+    <div class="masonry-item fade-in fade-in-delay-3">
+      <img src="https://images.squarespace-cdn.com/content/v1/5e7bce7b32e8dd4d03827631/b51893fa-637b-473e-b7af-ca09491bf340/2ACF2CBF-62D0-46BF-95B5-180DAA9D64AD.JPEG"
+           alt="Editorial portrait, olive beanie" loading="lazy" />
+    </div>
+    <div class="masonry-item fade-in fade-in-delay-1">
+      <img src="https://images.squarespace-cdn.com/content/v1/5e7bce7b32e8dd4d03827631/d0b8da4a-9d86-4b52-9bfb-2c16789afe9d/Screenshot+2024-03-11+at+10.24.13+AM.png"
+           alt="Flat lay, Anne of Green Gables" loading="lazy" />
+    </div>
+    <div class="masonry-item fade-in fade-in-delay-2">
+      <img src="https://images.squarespace-cdn.com/content/v1/5e7bce7b32e8dd4d03827631/4fec714c-00fd-4604-bd77-6bbc700c8e7d/Screenshot+2024-03-11+at+10.23.02+AM.png"
+           alt="Lifestyle, baby on play mat" loading="lazy" />
+    </div>
+    <div class="masonry-item fade-in fade-in-delay-3">
+      <img src="https://images.squarespace-cdn.com/content/v1/5e7bce7b32e8dd4d03827631/4da74d94-ac7d-431d-b978-39bcbe38525f/Screenshot+2024-03-11+at+10.24.24+AM.png"
+           alt="Beauty product, Goldie Locks" loading="lazy" />
+    </div>
+  </div>
+</section>
+
+<!-- FILM -->
+<section id="film">
+  <div class="section-header fade-in">
+    <p class="section-label">Moving Image</p>
+    <h2 class="section-title">Film</h2>
+  </div>
+  <div class="film-grid">
+    <div class="film-card fade-in fade-in-delay-1">
+      <div class="film-thumb">
+        <img src="https://images.squarespace-cdn.com/content/v1/5e7bce7b32e8dd4d03827631/4da74d94-ac7d-431d-b978-39bcbe38525f/Screenshot+2024-03-11+at+10.24.24+AM.png"
+             alt="Brand Campaign thumbnail" loading="lazy" />
+        <div class="play-btn">
+          <svg width="18" height="20" viewBox="0 0 18 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M1 1.5L17 10L1 18.5V1.5Z" stroke="white" stroke-width="1.5" stroke-linejoin="round"/>
+          </svg>
+        </div>
+      </div>
+      <div class="film-info">
+        <p class="film-tag">Commercial · 2024</p>
+        <p class="film-title">Brand Campaign — Goldie Locks Extensions</p>
+      </div>
+    </div>
+    <div class="film-card fade-in fade-in-delay-2">
+      <div class="film-thumb">
+        <img src="https://images.squarespace-cdn.com/content/v1/5e7bce7b32e8dd4d03827631/5ab755fb-841e-479c-9d2d-f5ac28314e37/EF525CEF-613C-43AA-A193-72B7FEC67BC0.JPEG"
+             alt="Documentary Short thumbnail" loading="lazy" />
+        <div class="play-btn">
+          <svg width="18" height="20" viewBox="0 0 18 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M1 1.5L17 10L1 18.5V1.5Z" stroke="white" stroke-width="1.5" stroke-linejoin="round"/>
+          </svg>
+        </div>
+      </div>
+      <div class="film-info">
+        <p class="film-tag">Documentary · 2023</p>
+        <p class="film-title">Documentary Short — Americana Series</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MUSIC -->
+<section id="music">
+  <div class="section-header fade-in">
+    <p class="section-label">Sound</p>
+    <h2 class="section-title">Music</h2>
+  </div>
+  <div class="music-tracks fade-in fade-in-delay-1">
+    <div class="track-item">
+      <span class="track-num">01</span>
+      <span class="track-title">Untitled Track 1</span>
+      <div class="waveform">
+        <div class="waveform-bar"></div><div class="waveform-bar"></div>
+        <div class="waveform-bar"></div><div class="waveform-bar"></div>
+        <div class="waveform-bar"></div><div class="waveform-bar"></div>
+        <div class="waveform-bar"></div><div class="waveform-bar"></div>
+        <div class="waveform-bar"></div><div class="waveform-bar"></div>
+        <div class="waveform-bar"></div><div class="waveform-bar"></div>
+      </div>
+      <span class="track-duration">—</span>
+    </div>
+    <div class="track-item">
+      <span class="track-num">02</span>
+      <span class="track-title">Untitled Track 2</span>
+      <div class="waveform">
+        <div class="waveform-bar"></div><div class="waveform-bar"></div>
+        <div class="waveform-bar"></div><div class="waveform-bar"></div>
+        <div class="waveform-bar"></div><div class="waveform-bar"></div>
+        <div class="waveform-bar"></div><div class="waveform-bar"></div>
+        <div class="waveform-bar"></div><div class="waveform-bar"></div>
+        <div class="waveform-bar"></div><div class="waveform-bar"></div>
+      </div>
+      <span class="track-duration">—</span>
+    </div>
+    <div class="track-item">
+      <span class="track-num">03</span>
+      <span class="track-title">Untitled Track 3</span>
+      <div class="waveform">
+        <div class="waveform-bar"></div><div class="waveform-bar"></div>
+        <div class="waveform-bar"></div><div class="waveform-bar"></div>
+        <div class="waveform-bar"></div><div class="waveform-bar"></div>
+        <div class="waveform-bar"></div><div class="waveform-bar"></div>
+        <div class="waveform-bar"></div><div class="waveform-bar"></div>
+        <div class="waveform-bar"></div><div class="waveform-bar"></div>
+      </div>
+      <span class="track-duration">—</span>
+    </div>
+  </div>
+  <p class="music-note fade-in fade-in-delay-2">
+    Music coming soon — <a href="mailto:hello@richardgarret.com">contact for inquiries</a>
+  </p>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-grid">
+    <div class="about-img-wrap fade-in fade-in-delay-1">
+      <img src="https://images.squarespace-cdn.com/content/v1/5e7bce7b32e8dd4d03827631/b51893fa-637b-473e-b7af-ca09491bf340/2ACF2CBF-62D0-46BF-95B5-180DAA9D64AD.JPEG"
+           alt="Garret Williams" loading="lazy" />
+    </div>
+    <div class="fade-in fade-in-delay-2">
+      <div class="section-header" style="margin-bottom: 32px;">
+        <p class="section-label">About</p>
+      </div>
+      <h2 class="about-name">(Richard) Garret<br>Williams</h2>
+      <div class="divider"></div>
+      <p class="about-bio">
+        Garret Williams is a Park City-based photographer, filmmaker, and musician with a talent for capturing authentic moments — from editorial portraiture to commercial campaigns, landscape photography to documentary film. His work spans industries and aesthetics, always grounded in a cinematic eye and genuine connection with his subjects.
+      </p>
+      <a href="mailto:hello@richardgarret.com" class="btn-outline">hello@richardgarret.com</a>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="fade-in">
+    <p class="section-label" style="text-align:center; margin-bottom: 24px;">Get In Touch</p>
+    <h2 class="contact-heading">Let's Work<br>Together</h2>
+    <p class="contact-sub">Available for commercial, editorial, and personal projects.</p>
+    <a href="mailto:hello@richardgarret.com" class="contact-email">hello@richardgarret.com</a>
+  </div>
+  <div class="social-links fade-in fade-in-delay-2">
+    <a href="#" class="social-link">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="2" y="2" width="20" height="20" rx="5" stroke="currentColor" stroke-width="1.5"/>
+        <circle cx="12" cy="12" r="4.5" stroke="currentColor" stroke-width="1.5"/>
+        <circle cx="17.5" cy="6.5" r="1" fill="currentColor"/>
+      </svg>
+      Instagram
+    </a>
+    <a href="#" class="social-link">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M22 7s-2.5 1.5-4 1.5C16.5 6 14.5 5 12 5 7.5 5 4 8.5 4 13s3.5 8 8 8 8-3.5 8-8V7h2z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+        <circle cx="12" cy="13" r="3" stroke="currentColor" stroke-width="1.5"/>
+      </svg>
+      Vimeo
+    </a>
+    <a href="#" class="social-link">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M8 9h8M8 12h5M8 15h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      Spotify
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>(Richard) Garret Williams &copy; 2026</p>
+  <p><a href="mailto:hello@richardgarret.com">hello@richardgarret.com</a></p>
+</footer>
+
+<script>
+  // Nav scroll effect
+  const nav = document.getElementById('main-nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 60);
+  }, { passive: true });
+
+  // Active nav link via IntersectionObserver
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-links a');
+  const sectionObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.id;
+        navLinks.forEach(a => {
+          a.classList.toggle('active', a.getAttribute('href') === '#' + id);
+        });
+      }
+    });
+  }, { threshold: 0.35 });
+  sections.forEach(s => sectionObserver.observe(s));
+
+  // Fade-in on scroll
+  const fadeEls = document.querySelectorAll('.fade-in');
+  const fadeObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        fadeObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  fadeEls.forEach(el => fadeObserver.observe(el));
+
+  // Hamburger / mobile menu
+  const hamburger = document.getElementById('hamburger');
+  const mobileMenu = document.getElementById('mobile-menu');
+  const mobileLinks = document.querySelectorAll('.mobile-link');
+
+  hamburger.addEventListener('click', () => {
+    const open = hamburger.classList.toggle('open');
+    mobileMenu.classList.toggle('open', open);
+    document.body.style.overflow = open ? 'hidden' : '';
+  });
+
+  mobileLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      hamburger.classList.remove('open');
+      mobileMenu.classList.remove('open');
+      document.body.style.overflow = '';
+    });
+  });
+</script>
+</body>
+</html>
